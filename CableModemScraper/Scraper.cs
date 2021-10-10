@@ -89,7 +89,7 @@ namespace CableModemScraper
             var downBondedStreamChannelTable = tables[1];
             var downStreamChannels = new List<DownBondedStreamChannel>();
 
-            foreach (var row in downBondedStreamChannelTable.SelectNodes("tr").Skip(2))
+            foreach (var row in downBondedStreamChannelTable.SelectNodes("tr").Skip(1))
             {
                 var tds = row.SelectNodes("td");
 
@@ -115,7 +115,7 @@ namespace CableModemScraper
             var upStreamChannelTable = tables[2];
             var upStreamBondedChannels = new List<UpStreamBondedChannel>();
 
-            foreach (var row in upStreamChannelTable.SelectNodes("tr").Skip(2))
+            foreach (var row in upStreamChannelTable.SelectNodes("tr").Skip(1))
             {
                 var tds = row.SelectNodes("td");
 
