@@ -2,7 +2,7 @@
 
 namespace CableModemScraper.Models
 {
-    public class Scaping
+    public class Scraping
     {
         public List<DownBondedStreamChannel> DownBondedStreamChannels { get; set; }
         public List<UpStreamBondedChannel> UpStreamBondedChannels { get; set; }

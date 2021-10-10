@@ -76,8 +76,8 @@
     <Compile Include="Models\DownBondedStreamChannel.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Scaper.cs" />
-    <Compile Include="Models\Scaping.cs" />
+    <Compile Include="Scraper.cs" />
+    <Compile Include="Models\Scraping.cs" />
     <Compile Include="Models\Settings.cs" />
     <Compile Include="Models\StartupProcedure.cs" />
     <Compile Include="TokenAcquirer.cs" />

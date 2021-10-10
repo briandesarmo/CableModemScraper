@@ -9,12 +9,12 @@ using System.Threading.Tasks;
 
 namespace CableModemScraper
 {
-    internal class Scaper
+    internal class Scraper
     {
         private Settings Settings;
-        public Scaper(Settings settings) => Settings = settings;
+        public Scraper(Settings settings) => Settings = settings;
 
-        public async Task<Scaping> ScrapeAsync()
+        public async Task<Scraping> ScrapeAsync()
         {
             var uris = new Uris(Settings);
             
@@ -51,11 +51,11 @@ namespace CableModemScraper
             return doc.DocumentNode.SelectNodes("//table[@class='simpleTable']");
         }
 
-        private Scaping ParseTables(HtmlNodeCollection tables)
+        private Scraping ParseTables(HtmlNodeCollection tables)
         {
             var timeStamp = DateTime.Now;
 
-            return new Scaping()
+            return new Scraping()
             {
                 StartupProcedures = ParseStartupProcedureTable(tables, timeStamp),
                 DownBondedStreamChannels = ParseDownBondedStreamChannelTable(tables, timeStamp),
