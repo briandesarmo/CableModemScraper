@@ -2,10 +2,10 @@
 
 namespace CableModemScraper.Models
 {
-    public class Scraping
+    internal class Scraping
     {
-        public List<DownBondedStreamChannel> DownBondedStreamChannels { get; set; }
-        public List<UpStreamBondedChannel> UpStreamBondedChannels { get; set; }
-        public List<StartupProcedure> StartupProcedures { get; set; }
+        internal List<DownStreamBondedChannel> DownStreamBondedChannels { get; set; }
+        internal List<UpStreamBondedChannel> UpStreamBondedChannels { get; set; }
+        internal List<StartupProcedure> StartupProcedures { get; set; }
     }
 }

@@ -12,7 +12,7 @@ namespace CableModemScraper.Models
         internal string DownStreamCsv { get; }
         internal string UpStreamCsv { get; }
 
-        public Settings()
+        internal Settings()
         {
             BaseAddress = new Uri(ConfigurationManager.AppSettings[Constants.AppSettingsKeys.BaseAddress]);
             UserName = ConfigurationManager.AppSettings[Constants.AppSettingsKeys.UserName];

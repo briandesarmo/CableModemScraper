@@ -1,4 +1,5 @@
 ﻿using CableModemScraper.Models;
+using System;
 using System.Net;
 
 namespace CableModemScraper
@@ -7,9 +8,9 @@ namespace CableModemScraper
     {
         private readonly Uris Uris;
 
-        public TokenAcquirer(Uris uris) => Uris = uris;
+        internal TokenAcquirer(Uris uris) => Uris = uris;
 
-        public string Acquire()
+        internal string Acquire()
         {
             string token;
 
@@ -21,6 +22,9 @@ namespace CableModemScraper
                 webclient.Headers.Set(HttpRequestHeader.Authorization, $"Basic {Uris.Auth}");
 
                 token = webclient.DownloadString(Uris.ConnectionStatusAddressWithAuth);
+
+                if (token.Contains("Login"))
+                    throw new Exception("Failed to acquire token!");
             }
 
             return token;

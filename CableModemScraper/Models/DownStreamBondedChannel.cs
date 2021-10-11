@@ -3,30 +3,31 @@ using System;
 
 namespace CableModemScraper.Models
 {
-    public class DownBondedStreamChannel
+    internal class DownStreamBondedChannel
     {
         [Index(0)]
-        [Name("Time Stamp")] 
+        [Format("yyyy-mm-dd hh:mm:ss")]
+        [Name("Time Stamp")]
         public DateTime TimeStamp { get; set; }
-        
+
         [Index(1)]
         [Name("Channel ID")]
         public int ChannelId { get; set; }
-        
+
         [Index(2)]
         [Name("Lock Status")]
         public string LockStatus { get; set; }
 
         [Index(3)]
-        [Name("Modulation")] 
+        [Name("Modulation")]
         public string Modulation { get; set; }
 
-        [Index(4)] 
+        [Index(4)]
         [Name("Frequency")]
         public int Frequency { get; set; }
 
         [Index(5)]
-        [Name("Power")] 
+        [Name("Power")]
         public decimal Power { get; set; }
 
         [Index(6)]
@@ -38,7 +39,7 @@ namespace CableModemScraper.Models
         public long Corrected { get; set; }
 
         [Index(8)]
-        [Name("Uncorrectables")] 
+        [Name("Uncorrectables")]
         public long Uncorrectables { get; set; }
     }
 }

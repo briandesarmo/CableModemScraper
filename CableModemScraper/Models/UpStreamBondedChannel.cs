@@ -3,9 +3,10 @@ using System;
 
 namespace CableModemScraper.Models
 {
-    public class UpStreamBondedChannel
+    internal class UpStreamBondedChannel
     {
         [Index(0)]
+        [Format("yyyy-mm-dd hh:mm:ss")]
         [Name("Time Stamp")]
         public DateTime TimeStamp { get; set; }
 

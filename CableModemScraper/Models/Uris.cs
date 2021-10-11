@@ -14,7 +14,7 @@ namespace CableModemScraper.Models
         private const string ConnectionStatusPath = "cmconnectionstatus.html";
         private const string LogoutPath = "logout.html";
 
-        public Uris(Settings settings)
+        internal Uris(Settings settings)
         {
             var auth = Convert.ToBase64String(Encoding.ASCII.GetBytes($"{settings.UserName}:{settings.Password}"));
 

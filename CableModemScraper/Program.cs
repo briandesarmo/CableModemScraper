@@ -20,14 +20,14 @@ namespace CableModemScraper
             {
                 var scraping = await scraper.ScrapeAsync();
                 WriteCsv(settings.StartupProceduresCsv, scraping.StartupProcedures);
-                WriteCsv(settings.DownStreamCsv, scraping.DownBondedStreamChannels);
+                WriteCsv(settings.DownStreamCsv, scraping.DownStreamBondedChannels);
                 WriteCsv(settings.UpStreamCsv, scraping.UpStreamBondedChannels);
 
                 Thread.Sleep(300000);
             }
         }
 
-        static void WriteCsv<T>(string path, List<T> records) where T : class
+        internal static void WriteCsv<T>(string path, List<T> records) where T : class
         {
             var fileExists = File.Exists(path);
 

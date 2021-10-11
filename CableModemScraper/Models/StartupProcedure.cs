@@ -3,9 +3,10 @@ using System;
 
 namespace CableModemScraper.Models
 {
-    public class StartupProcedure
+    internal class StartupProcedure
     {
         [Index(0)]
+        [Format("yyyy-mm-dd hh:mm:ss")]
         [Name("Time Stamp")]
         public DateTime TimeStamp { get; set; }
 

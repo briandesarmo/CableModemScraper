@@ -12,12 +12,12 @@ namespace CableModemScraper
     internal class Scraper
     {
         private Settings Settings;
-        public Scraper(Settings settings) => Settings = settings;
+        internal Scraper(Settings settings) => Settings = settings;
 
-        public async Task<Scraping> ScrapeAsync()
+        internal async Task<Scraping> ScrapeAsync()
         {
             var uris = new Uris(Settings);
-            
+
             ServicePointManager.ServerCertificateValidationCallback += (sender, cert, chain, sslPolicyErrors) => true;
             ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls;
 
@@ -58,17 +58,17 @@ namespace CableModemScraper
             return new Scraping()
             {
                 StartupProcedures = ParseStartupProcedureTable(tables, timeStamp),
-                DownBondedStreamChannels = ParseDownBondedStreamChannelTable(tables, timeStamp),
-                UpStreamBondedChannels = ParseUpStreamBondedChannelTable(tables, timeStamp)
+                DownStreamBondedChannels = ParseDownStreamBondedChannelsTable(tables, timeStamp),
+                UpStreamBondedChannels = ParseUpStreamBondedChannelsTable(tables, timeStamp)
             };
         }
 
         private List<StartupProcedure> ParseStartupProcedureTable(HtmlNodeCollection tables, DateTime timeStamp)
         {
-            var startupProcedureChannelTable = tables[0];
+            var table = tables[0];
             var startupProcedures = new List<StartupProcedure>();
 
-            foreach (var row in startupProcedureChannelTable.SelectNodes("tr").Skip(2))
+            foreach (var row in table.SelectNodes("tr").Skip(2))
             {
                 var tds = row.SelectNodes("td");
 
@@ -84,16 +84,16 @@ namespace CableModemScraper
             return startupProcedures;
         }
 
-        private List<DownBondedStreamChannel> ParseDownBondedStreamChannelTable(HtmlNodeCollection tables, DateTime timeStamp)
+        private List<DownStreamBondedChannel> ParseDownStreamBondedChannelsTable(HtmlNodeCollection tables, DateTime timeStamp)
         {
-            var downBondedStreamChannelTable = tables[1];
-            var downStreamChannels = new List<DownBondedStreamChannel>();
+            var table = tables[1];
+            var downStreamChannels = new List<DownStreamBondedChannel>();
 
-            foreach (var row in downBondedStreamChannelTable.SelectNodes("tr").Skip(1))
+            foreach (var row in table.SelectNodes("tr").Skip(1))
             {
                 var tds = row.SelectNodes("td");
 
-                downStreamChannels.Add(new DownBondedStreamChannel()
+                downStreamChannels.Add(new DownStreamBondedChannel()
                 {
                     TimeStamp = timeStamp,
                     ChannelId = int.Parse(tds[0].InnerText),
@@ -110,12 +110,12 @@ namespace CableModemScraper
             return downStreamChannels;
         }
 
-        private List<UpStreamBondedChannel> ParseUpStreamBondedChannelTable(HtmlNodeCollection tables, DateTime timeStamp)
+        private List<UpStreamBondedChannel> ParseUpStreamBondedChannelsTable(HtmlNodeCollection tables, DateTime timeStamp)
         {
-            var upStreamChannelTable = tables[2];
+            var table = tables[2];
             var upStreamBondedChannels = new List<UpStreamBondedChannel>();
 
-            foreach (var row in upStreamChannelTable.SelectNodes("tr").Skip(1))
+            foreach (var row in table.SelectNodes("tr").Skip(1))
             {
                 var tds = row.SelectNodes("td");
 
