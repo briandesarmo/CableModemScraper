@@ -18,7 +18,7 @@ namespace CableModemScraper.Models
         {
             var auth = Convert.ToBase64String(Encoding.ASCII.GetBytes($"{settings.UserName}:{settings.Password}"));
 
-            BaseAddress = settings.BaseAddress;
+            BaseAddress = new UriBuilder(settings.BaseAddress).Uri;
             ConnectionStatusAddress = new UriBuilder(BaseAddress) { Path = ConnectionStatusPath }.Uri;
             ConnectionStatusAddressWithAuth = new UriBuilder(ConnectionStatusAddress) { Query = auth }.Uri;
             Logout = new UriBuilder(BaseAddress) { Path = LogoutPath }.Uri;

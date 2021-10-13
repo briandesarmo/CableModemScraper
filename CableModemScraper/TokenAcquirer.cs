@@ -16,6 +16,8 @@ namespace CableModemScraper
 
             using (var webclient = new WebClient())
             {
+                var _ = webclient.DownloadString(Uris.BaseAddress);
+
                 webclient.Headers.Set(HttpRequestHeader.Accept, $"*/*");
                 webclient.Headers.Set(HttpRequestHeader.ContentType, "application/x-www-form-urlencoded; charset=utf-8");
                 webclient.Headers.Set(HttpRequestHeader.Cookie, "HttpOnly: true, Secure: true");
