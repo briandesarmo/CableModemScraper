@@ -36,7 +36,7 @@ namespace CableModemScraper
                     var response = await client.SendAsync(requestMessage);
                     token = await response.Content.ReadAsStringAsync();
 
-                    sessionId  = response.Headers.SingleOrDefault(x => x.Key == "Set-Cookie").Value.First()?.ToString()?.Split(';')?.First()?.Split('=')?.Last();
+                    sessionId  = response.Headers.SingleOrDefault(x => x.Key == "Set-Cookie").Value?.FirstOrDefault()?.Split(';')?.FirstOrDefault()?.Split('=')?.LastOrDefault();
                 }
             }
 
