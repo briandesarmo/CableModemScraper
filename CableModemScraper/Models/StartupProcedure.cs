@@ -6,7 +6,7 @@ namespace CableModemScraper.Models
     internal class StartupProcedure
     {
         [Index(0)]
-        [Format("yyyy-mm-dd hh:mm:ss")]
+        [Format("yyyy-MM-dd hh:mm:ss")]
         [Name("Time Stamp")]
         public DateTime TimeStamp { get; set; }
 

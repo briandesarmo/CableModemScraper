@@ -4,6 +4,7 @@ using CsvHelper.Configuration;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -20,8 +21,12 @@ namespace CableModemScraper
             {
                 var scraping = await scraper.ScrapeAsync();
                 WriteCsv(settings.StartupProceduresCsv, scraping.StartupProcedures);
-                WriteCsv(settings.DownStreamCsv, scraping.DownStreamBondedChannels);
-                WriteCsv(settings.UpStreamCsv, scraping.UpStreamBondedChannels);
+
+                foreach (var grp in scraping.DownStreamBondedChannels.GroupBy(c => c.ChannelId))
+                    WriteCsv($"{grp.Key}_{settings.DownStreamCsv}", grp.ToList());
+
+                foreach (var grp in scraping.UpStreamBondedChannels.GroupBy(c => c.ChannelId))
+                    WriteCsv($"{grp.Key}_{settings.UpStreamCsv}", grp.ToList());
 
                 Thread.Sleep(300000);
             }
