@@ -14,14 +14,18 @@ namespace CableModemScraper
         private Settings Settings;
         internal Scraper(Settings settings) => Settings = settings;
 
+        private HttpClientHandler InsecureHttpClientHandler(CookieContainer cookieContainer)
+            => new HttpClientHandler() 
+            {
+                ServerCertificateCustomValidationCallback = HttpClientHandler.DangerousAcceptAnyServerCertificateValidator,
+                CookieContainer = cookieContainer
+            };
+
         internal async Task<Scraping> ScrapeAsync()
         {
             var uris = new Uris(Settings);
 
-            ServicePointManager.ServerCertificateValidationCallback += (sender, cert, chain, sslPolicyErrors) => true;
-            ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls;
-
-            var (token, cookie) = new TokenAcquirer(uris).Acquire();
+            var (token, cookie) = await new TokenAcquirer(uris).AcquireAsync();
             var content = await FetchPageAsync(uris, token, cookie);
             var tables = GetTables(content);
 
@@ -33,7 +37,7 @@ namespace CableModemScraper
             string content;
             var cookieContainer = new CookieContainer();
             cookieContainer.Add(uris.BaseAddress, new Cookie("sessionId", sessionId));
-            using (var handler = new HttpClientHandler() { CookieContainer = cookieContainer })
+            using (var handler = InsecureHttpClientHandler(cookieContainer))
             using (var client = new HttpClient(handler) { BaseAddress = uris.BaseAddress })
             {
                 var result = await client.GetAsync(new UriBuilder(uris.ConnectionStatusAddress) { Query = $"ct_{token}" }.Uri);

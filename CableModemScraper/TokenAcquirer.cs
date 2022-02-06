@@ -2,6 +2,7 @@
 using System;
 using System.Linq;
 using System.Net;
+using System.Net.Http;
 
 namespace CableModemScraper
 {
@@ -11,32 +12,39 @@ namespace CableModemScraper
 
         internal TokenAcquirer(Uris uris) => Uris = uris;
 
-        internal Tuple<string, string> Acquire()
+        private HttpClientHandler InsecureHttpClientHandler => new HttpClientHandler() { ServerCertificateCustomValidationCallback = HttpClientHandler.DangerousAcceptAnyServerCertificateValidator };
+
+        internal async System.Threading.Tasks.Task<Tuple<string, string>> AcquireAsync()
         {
-            string token;
-            string sessionId;
+            string token = string.Empty;
+            string sessionId = string.Empty; ;
 
-            using (var webclient = new WebClient())
+            using (var client = new HttpClient(InsecureHttpClientHandler))
             {
-                try { webclient.DownloadString(Uris.Logout); } catch (Exception) { }
+                try { await client.GetAsync(Uris.Logout); } catch (Exception) { }
 
-                var _ = webclient.DownloadString(Uris.BaseAddress);
+                var _ = client.GetAsync(Uris.BaseAddress);
 
-                webclient.Headers.Set(HttpRequestHeader.Accept, $"*/*");
-                webclient.Headers.Set(HttpRequestHeader.ContentType, "application/x-www-form-urlencoded; charset=utf-8");
-                webclient.Headers.Set(HttpRequestHeader.Cookie, "HttpOnly: true, Secure: true");
-                webclient.Headers.Set(HttpRequestHeader.Authorization, $"Basic {Uris.Auth}");
+                using (var requestMessage = new HttpRequestMessage(HttpMethod.Get, Uris.ConnectionStatusAddressWithAuth))
+                {
+                    requestMessage.Headers.Clear();
+                    requestMessage.Headers.Accept.Add(new System.Net.Http.Headers.MediaTypeWithQualityHeaderValue("*/*"));
+                    requestMessage.Headers.Add(HttpRequestHeader.ContentType.ToString(), "application/x-www-form-urlencoded; charset=utf-8");
+                    requestMessage.Headers.Add(HttpRequestHeader.Cookie.ToString(), "HttpOnly: true, Secure: true");
+                    requestMessage.Headers.Add("Authorization", $"Basic {Uris.Auth}");
 
-                token = webclient.DownloadString(Uris.ConnectionStatusAddressWithAuth);
+                    var response = await client.SendAsync(requestMessage);
+                    token = await response.Content.ReadAsStringAsync();
 
-                sessionId = webclient.ResponseHeaders["Set-Cookie"]?.Split(';')?.First()?.Split('=')?.Last();
-
-                if (token.Contains("Login"))
-                    throw new Exception("Failed to acquire token!");
-
-                if (sessionId == null)
-                    throw new Exception("Failed to aquire sessionId!");
+                    sessionId  = response.Headers.SingleOrDefault(x => x.Key == "Set-Cookie").Value.First()?.ToString()?.Split(';')?.First()?.Split('=')?.Last();
+                }
             }
+
+            if (token.Contains("Login"))
+                throw new Exception("Failed to acquire token!");
+
+            if (sessionId == null)
+                throw new Exception("Failed to aquire sessionId!");
 
             return new Tuple<string, string>(token, sessionId);
         }
