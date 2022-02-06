@@ -20,7 +20,7 @@ namespace CableModemScraper.Models
 
             BaseAddress = new UriBuilder(settings.BaseAddress).Uri;
             ConnectionStatusAddress = new UriBuilder(BaseAddress) { Path = ConnectionStatusPath }.Uri;
-            ConnectionStatusAddressWithAuth = new UriBuilder(ConnectionStatusAddress) { Query = auth }.Uri;
+            ConnectionStatusAddressWithAuth = new UriBuilder(ConnectionStatusAddress) { Query = $"login_{auth}" }.Uri;
             Logout = new UriBuilder(BaseAddress) { Path = LogoutPath }.Uri;
             Auth = auth;
         }

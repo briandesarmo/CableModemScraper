@@ -21,22 +21,22 @@ namespace CableModemScraper
             ServicePointManager.ServerCertificateValidationCallback += (sender, cert, chain, sslPolicyErrors) => true;
             ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls;
 
-            var token = new TokenAcquirer(uris).Acquire();
-            var content = await FetchPageAsync(uris, token);
+            var (token, cookie) = new TokenAcquirer(uris).Acquire();
+            var content = await FetchPageAsync(uris, token, cookie);
             var tables = GetTables(content);
 
             return ParseTables(tables);
         }
 
-        private async Task<string> FetchPageAsync(Uris uris, string token)
+        private async Task<string> FetchPageAsync(Uris uris, string token, string sessionId)
         {
             string content;
             var cookieContainer = new CookieContainer();
-            cookieContainer.Add(uris.BaseAddress, new Cookie("credential", token));
+            cookieContainer.Add(uris.BaseAddress, new Cookie("sessionId", sessionId));
             using (var handler = new HttpClientHandler() { CookieContainer = cookieContainer })
             using (var client = new HttpClient(handler) { BaseAddress = uris.BaseAddress })
             {
-                var result = await client.GetAsync(uris.ConnectionStatusAddress);
+                var result = await client.GetAsync(new UriBuilder(uris.ConnectionStatusAddress) { Query = $"ct_{token}" }.Uri);
                 content = await result.Content.ReadAsStringAsync();
                 try { _ = await client.GetAsync(uris.Logout); } catch (Exception) { }
             }
